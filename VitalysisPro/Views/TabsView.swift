@@ -1,30 +1,33 @@
 import SwiftUI
 
+import SwiftUI
+
+@available(iOS 18.0, *)
 struct TabsView: View {
     @State private var selectedIndex = 0
     private let tabs = [
-        ("Home", "hand.raised.fill"),
-        ("Data", "chart.xyaxis.line"),
-        ("Contacts", "person.2.fill")
-    ]
+        ("Home", "house.fill"),
+        ("Log", "list.bullet.rectangle"),
+        ("Browse", "book.fill")]
     
     var body: some View {
         ZStack {
-            // The content for each tab
+           
+            
             ZStack {
                 if selectedIndex == 0 {
                     HomeView()
-                      
                 } else if selectedIndex == 1 {
-                    DataView()
+                    LogView()
                 } else if selectedIndex == 2 {
-                    BluetoothView()
+                    BrowseView()
                 }
             }
             
-            // Custom Tab Bar
             CustomTabBar(tabs: tabs, selectedIndex: $selectedIndex)
-                .offset(y: 390)
+                .background(Color("white"))
+                .offset(y: 370)
+           
         }
         .background(Color("bg"))
         .edgesIgnoringSafeArea(.all)
@@ -42,7 +45,6 @@ struct CustomTabBar: View {
             ForEach(0..<tabs.count, id: \.self) { index in
                 Spacer()
                 VStack {
-                    
                     Image(systemName: tabs[index].1)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -52,21 +54,23 @@ struct CustomTabBar: View {
                         .font(.footnote)
                         .foregroundColor(selectedIndex == index ? .blue : .gray)
                 }
-                .frame(width: 100)
                 .onTapGesture {
                     selectedIndex = index
                 }
                 Spacer()
             }
         }
+        
         .padding(.vertical, 10)
         .padding(.horizontal, 5)
-        .background(Color("gray"))
+        .background(Color("white"))
     }
 }
 
+@available(iOS 18.0, *)
 struct TabsView_Previews: PreviewProvider {
     static var previews: some View {
         TabsView()
+            .environmentObject(UserStore.example())
     }
 }

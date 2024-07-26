@@ -19,54 +19,56 @@ struct TextBox: View {
     // Colors defined directly in the struct
     private let activeColor = Color("boxBefore")
     private let inactiveColor = Color("boxAfter")
-    private let validColor = Color("primary").opacity(0.5)
-    private let invalidColor = Color.gray.opacity(0.3)
+    private let validColor = Color.green.opacity(0.7)
+    private let invalidColor = Color.white.opacity(0.7)
     
     var body: some View {
-        Group {
-            
+        
+        
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color("textBoxFill").opacity(0.7))
+                .stroke(isValid ? validColor: invalidColor, lineWidth: 1)
             if fieldType == .password {
-                SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("white")))
+                SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("fg").opacity(0.5)))
+                   
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .foregroundStyle(Color("white"))
+                    .foregroundStyle(Color("fg"))
                     .padding(.horizontal, 21)
                     .frame(width: 320, height: 59)
                     .multilineTextAlignment(.leading) // Align text to the left
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(isValid ? validColor : invalidColor, lineWidth: 4)
-                    )
+                    
                     .onChange(of: text) { newValue in
                         validateInput(newValue)
                     }
                 
             } else {
-                TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("white")))
+                TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("fg").opacity(0.5)))
+                   
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .foregroundStyle(Color("white"))
-                    .foregroundStyle(Color("white"))
+                    .foregroundStyle(Color("fg"))
                     .padding(.horizontal, 21)
                     .frame(width: 320, height: 59)
                     .keyboardType(fieldType == .email ? .emailAddress : .default)
                     .multilineTextAlignment(.leading) // Align text to the left
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(isValid ? validColor : invalidColor, lineWidth: 4)
-                    )
+                
                     .onChange(of: text) { newValue in
                         validateInput(newValue)
                     }
             }
-            
+                
         }
+        .frame(height: 60)
         
         .onTapGesture {
             activeIndex = currentIndex
         }
-        .background(activeIndex == currentIndex ? activeColor : inactiveColor)
         .padding(30)
+            
+        
+       
     }
     
     private func validateInput(_ value: String) {

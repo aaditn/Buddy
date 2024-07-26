@@ -1,0 +1,56 @@
+import Foundation
+import SwiftUI
+
+class UserStore: ObservableObject {
+    @Published var name: String
+    @Published var img: Image
+    @Published var people: [Person]
+    @Published var encounters: [Encounter]
+    init(name: String, img: Image, logs: [Person], encounters: [Encounter]) {
+        self.name = name
+        self.img = img
+        self.people = logs
+        self.encounters = encounters
+    }
+    
+    static func example() -> UserStore {
+        let person1: Person = Person(fName: "Anuhya", lName: "Gottam", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
+        let person2: Person = Person(fName: "Paige", lName: "Shugart", tag: "00002", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
+        let person3: Person = Person(fName: "Aadit", lName: "Noronha", tag: "00003", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.twoTap())
+        
+        // Create a calendar instance
+        let calendar = Calendar.current
+        
+        // Calculate dates
+        let now = Date()
+        let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: -1, to: now)!
+        let fourMonthsAgo = calendar.date(byAdding: .month, value: -4, to: now)!
+        let twoHoursAgo = calendar.date(byAdding: .hour, value: -2, to: now)!
+        
+        let encounter1: Encounter = Encounter(date: oneWeekAgo, person: person1)
+        let encounter2: Encounter = Encounter(date: fourMonthsAgo, person: person2)
+        let encounter3: Encounter = Encounter(date: twoHoursAgo, person: person3)
+        
+        return UserStore(name: "Joe Mama", img: Image("exampleDude"), logs: [person1], encounters: [encounter1])
+    }
+
+}
+
+struct GetProfile: View {
+    @EnvironmentObject var user: UserStore
+    var size: Int
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.black.opacity(0.2))
+            
+            user.img
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: CGFloat(size), height: CGFloat(size))
+                .clipShape(Circle())
+        }
+        .frame(width: CGFloat(size), height: CGFloat(size))
+    }
+}

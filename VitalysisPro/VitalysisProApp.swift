@@ -8,9 +8,10 @@
 import SwiftUI
 import SwiftData
 
+@available(iOS 18.0, *)
 @main
 struct VitalysisProApp: App {
-    @StateObject private var store = userStore(n: "Aadit", s: [Servo(power: 0)], m: [])
+    private var store = UserStore.example()
     
     /*var sharedModelContainer: ModelContainer = {
            let schema = Schema([
@@ -37,6 +38,9 @@ struct VitalysisProApp: App {
         
        // .modelContainer(sharedModelContainer)
     }
+    
+    
+    // "4:44 PM on June 23, 2016\n"
 }
 struct HoverEffect: ViewModifier {
     @State private var isHovered = false // Track hover state
@@ -59,8 +63,9 @@ extension View {
     }
 }
 
+@available(iOS 18.0, *)
 struct CustomNavigationStack<Content>: View where Content: View {
-    @Binding var currentIndex: Int
+    @Binding var currentIndex: Bool
     var content: () -> Content
     
     var body: some View {
@@ -69,11 +74,11 @@ struct CustomNavigationStack<Content>: View where Content: View {
                 .zIndex(0)
             
             // Handle transitions between views based on currentIndex
-            if currentIndex >= 0 && currentIndex <= 4 {
-                PressureMapView(currentIndex: $currentIndex)
+            if currentIndex == true {
+                HomeView()
                     .zIndex(1)
             } else {
-                HomeView(currentIndex: currentIndex)
+                HomeView()
                     .zIndex(1)
             }
         }
