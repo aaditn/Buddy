@@ -17,9 +17,11 @@ struct SignUpView: View {
     @State private var isNameValid: Bool = true
     @State private var isEmailValid: Bool = false
     @State private var isPasswordValid: Bool = false
+    @State private var isPhoneValid: Bool = false
     
     @State private var emailError: String = ""
     @State private var passwordError: String = ""
+    @State private var phoneError: String = ""
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     
@@ -44,7 +46,7 @@ struct SignUpView: View {
                             
                         Spacer()
                     }
-                } .foregroundColor(Color("fg")) 
+                } .foregroundColor(Color("fg"))
             }
             VStack {
                 TextBox(
@@ -55,14 +57,19 @@ struct SignUpView: View {
                     fieldType: .normal
                 )
                
-                
                 TextBox(
                     text: $phone,
                     placeholder: "Phone",
                     activeIndex: $activeIndex,
                     currentIndex: 1,
-                    fieldType: .normal
+                    fieldType: .phone
                 )
+                .onChange(of: phone) { newValue in
+                    validatePhone(newValue)
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                }
                 
                 TextBox(
                     text: $email,
@@ -90,17 +97,18 @@ struct SignUpView: View {
                 }
                 
                 Button(action: {
-                   // if isNameValid && isEmailValid && isPasswordValid && !phone.isEmpty {
-                        
+                  // if isNameValid && isEmailValid && isPasswordValid && isPhoneValid {
                         submit = true
-                        print ("validation success")
-                   // } else {
-                        print (isNameValid)
-                        print (isEmailValid)
-                        print (isPasswordValid)
-                        print (!phone.isEmpty)
+                        print("Validation success")
+                  // } else {
+                        print(isNameValid)
+                        print(isEmailValid)
+                        print(isPasswordValid)
+                        print(isPhoneValid)
                         print("Validation failed")
-                   // }
+                     //   alertMessage = "Please fill in all fields correctly."
+                   //     showAlert = true
+                  // }
                 }) {
                     Text("Sign Up")
                         .frame(width: 320, height: 59)
@@ -111,20 +119,31 @@ struct SignUpView: View {
                 .background(Color("primary"))
                 .cornerRadius(10)
                 .padding(40)
-                .fullScreenCover(isPresented: $submit, content: {
-                    BluetoothView(isIntro: true, mode: $mode)
-                })
+               
             }
             .padding(.top, 20)
             
+            
             Spacer()
         }
+        .onChange(of: submit) {
+            print (submit)
+            print("IEUGBAOIQGNFOQUEGBQ")
+        }
+        .fullScreenCover(isPresented: $submit, content: {
+            BluetoothView(isIntro: true, mode: $mode)
+        })
         .background(Color("white"))
     }
     
     func validateEmail(_ email: String) {
         isEmailValid = isValidEmail(email)
         emailError = isEmailValid ? "" : "Invalid email format"
+    }
+    
+    func validatePhone(_ phone: String) {
+        isPhoneValid = phone.count >= 10
+        phoneError = isPhoneValid ? "" : "Phone number must be exactly 10 digits"
     }
     
     func validatePassword(_ password: String) {
@@ -139,7 +158,6 @@ struct SignUpView: View {
         return emailPred.evaluate(with: email)
     }
 
-    
 }
 
 @available(iOS 18.0, *)

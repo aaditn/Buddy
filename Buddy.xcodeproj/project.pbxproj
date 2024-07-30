@@ -28,10 +28,6 @@
 		9B8894512C51B315005D71D0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8894502C51B315005D71D0 /* SettingsView.swift */; };
 		9B8894542C52B046005D71D0 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8894532C52B046005D71D0 /* CameraManager.swift */; };
 		9B8894562C52B05E005D71D0 /* CameraViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8894552C52B05E005D71D0 /* CameraViewRepresentable.swift */; };
-		9B8894612C53058B005D71D0 /* deviceview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B88945E2C53058B005D71D0 /* deviceview.swift */; };
-		9B8894632C53058B005D71D0 /* PairedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B88945F2C53058B005D71D0 /* PairedView.swift */; };
-		9B8894642C53058B005D71D0 /* AccessoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B88945B2C53058B005D71D0 /* AccessoryModel.swift */; };
-		9B8894652C53058B005D71D0 /* AccessorySessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B88945D2C53058B005D71D0 /* AccessorySessionManager.swift */; };
 		9B8C8F042C4F1560004610B0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8C8F032C4F1560004610B0 /* HomeView.swift */; };
 		9B8C8F082C5002FE004610B0 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8C8F072C5002FE004610B0 /* PeopleView.swift */; };
 		9BE9A9212C4835B500C04C6B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE9A9202C4835B500C04C6B /* ContentView.swift */; };
@@ -48,7 +44,7 @@
 		9B5D84052C42ECDA009BD8C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B5D84082C42ECDA009BD8C9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9B5D840A2C42ECDA009BD8C9 /* VitalysisPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitalysisPro.entitlements; sourceTree = "<group>"; };
-		9B5D840B2C42ECDA009BD8C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B5D840B2C42ECDA009BD8C9 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Info.plist; sourceTree = "<group>"; };
 		9B5D84132C42EDD3009BD8C9 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		9B5D841C2C42F2B2009BD8C9 /* BluetoothView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothView.swift; sourceTree = "<group>"; };
 		9B5D841E2C42F2BD009BD8C9 /* SignUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -62,10 +58,6 @@
 		9B8894502C51B315005D71D0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9B8894532C52B046005D71D0 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		9B8894552C52B05E005D71D0 /* CameraViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewRepresentable.swift; sourceTree = "<group>"; };
-		9B88945B2C53058B005D71D0 /* AccessoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryModel.swift; sourceTree = "<group>"; };
-		9B88945D2C53058B005D71D0 /* AccessorySessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessorySessionManager.swift; sourceTree = "<group>"; };
-		9B88945E2C53058B005D71D0 /* deviceview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = deviceview.swift; sourceTree = "<group>"; };
-		9B88945F2C53058B005D71D0 /* PairedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedView.swift; sourceTree = "<group>"; };
 		9B8C8F032C4F1560004610B0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		9B8C8F072C5002FE004610B0 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		9BE9A9202C4835B500C04C6B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -129,7 +121,6 @@
 				9B7119922C433905005B7536 /* UserStore.swift */,
 				9B3D61E72C5025D3003C3389 /* Pattern.swift */,
 				9B8894412C51527B005D71D0 /* Encounter.swift */,
-				9B8894602C53058B005D71D0 /* accessorySetupKit */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,17 +195,6 @@
 			path = Camera;
 			sourceTree = "<group>";
 		};
-		9B8894602C53058B005D71D0 /* accessorySetupKit */ = {
-			isa = PBXGroup;
-			children = (
-				9B88945B2C53058B005D71D0 /* AccessoryModel.swift */,
-				9B88945D2C53058B005D71D0 /* AccessorySessionManager.swift */,
-				9B88945E2C53058B005D71D0 /* deviceview.swift */,
-				9B88945F2C53058B005D71D0 /* PairedView.swift */,
-			);
-			path = accessorySetupKit;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -285,10 +265,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B8894612C53058B005D71D0 /* deviceview.swift in Sources */,
-				9B8894632C53058B005D71D0 /* PairedView.swift in Sources */,
-				9B8894642C53058B005D71D0 /* AccessoryModel.swift in Sources */,
-				9B8894652C53058B005D71D0 /* AccessorySessionManager.swift in Sources */,
 				9B8894562C52B05E005D71D0 /* CameraViewRepresentable.swift in Sources */,
 				9B3AB8D72C4983E400090D86 /* SlideDownPopup.swift in Sources */,
 				9B8894542C52B046005D71D0 /* CameraManager.swift in Sources */,
@@ -450,6 +426,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VitalysisPro/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to connect to and communicate with your Buddy accessory.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to connect to and communicate with your Buddy accessory.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -487,6 +466,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VitalysisPro/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to connect to and communicate with your Buddy accessory.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to connect to and communicate with your Buddy accessory.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

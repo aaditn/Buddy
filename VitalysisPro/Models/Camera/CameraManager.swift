@@ -6,8 +6,10 @@ class CameraManager: NSObject, ObservableObject {
     @Published var output = AVCapturePhotoOutput()
     @Published var previewLayer = AVCaptureVideoPreviewLayer()
     @Published var capturedImage: UIImage?
+    @Published var burstImages: [UIImage] = []
     
     private var deviceInput: AVCaptureDeviceInput?
+    private var isBurstCapturing = false
     
     override init() {
         super.init()
@@ -30,7 +32,6 @@ class CameraManager: NSObject, ObservableObject {
                 session.addOutput(output)
             }
             
-            // Ensure zoom factor is set to 1.0 (no zoom)
             try camera.lockForConfiguration()
             if camera.activeFormat.videoMaxZoomFactor > 1.0 {
                 camera.videoZoomFactor = 1.0
@@ -50,15 +51,41 @@ class CameraManager: NSObject, ObservableObject {
         let settings = AVCapturePhotoSettings()
         output.capturePhoto(with: settings, delegate: self)
     }
+    
+    func startBurstCapture() {
+        isBurstCapturing = true
+        burstImages.removeAll()
+        captureNextBurstPhoto()
+    }
+    
+    func stopBurstCapture() {
+        isBurstCapturing = false
+    }
+    
+    private func captureNextBurstPhoto() {
+        guard isBurstCapturing else { return }
+        
+        let settings = AVCapturePhotoSettings()
+        output.capturePhoto(with: settings, delegate: self)
+        
+        // Schedule the next capture immediately
+        DispatchQueue.main.async {
+            self.captureNextBurstPhoto()
+        }
+    }
 }
 
 extension CameraManager: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let data = photo.fileDataRepresentation(),
               let image = UIImage(data: data) else { return }
+        
         DispatchQueue.main.async {
-            self.capturedImage = image
-            print("Preview layer frame: \(self.previewLayer.frame)")
+            if self.isBurstCapturing {
+                self.burstImages.append(image)
+            } else {
+                self.capturedImage = image
+            }
         }
     }
 }

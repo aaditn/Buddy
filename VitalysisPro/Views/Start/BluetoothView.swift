@@ -8,9 +8,6 @@ struct BluetoothView: View {
     @State private var bluetoothError: Error?
     let isIntro: Bool
     
-    @State var accessorySessionManager = AccessorySessionManager()
-    @AppStorage("accessoryPaired") private var accessoryPaired = false
-    
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var mode: Int
@@ -19,8 +16,8 @@ struct BluetoothView: View {
    
 
   var body: some View {
-      if accessoryPaired {
-          PairedView(accessorySessionManager: accessorySessionManager)
+      if false {
+        //  PairedView(accessorySessionManager: accessorySessionManager)
       } else {
           VStack {
               ZStack {
@@ -79,7 +76,7 @@ struct BluetoothView: View {
                       Text("Pairing...")
                           .padding(.leading, 30)
                           .padding(.top, 5)
-                          .foregroundStyle(Color.black)
+                          .foregroundStyle(Color("fg"))
                           .font(.system(size: 35, weight: .semibold))
                       Spacer()
                   }
@@ -112,7 +109,7 @@ struct BluetoothView: View {
               }.padding(.top, 50)
              
               Button(action: {
-                  accessorySessionManager.presentPicker()
+                  continuePage = true
               }){
                   ZStack {
                       RoundedRectangle(cornerRadius: 16)
@@ -157,9 +154,13 @@ struct BluetoothView: View {
                   
           }
           .background(Color("white"))
+        
           .fullScreenCover(isPresented: $continuePage) {
+              /*
               PairedView(accessorySessionManager: accessorySessionManager)
                   .transition(.opacity)
+               */
+              TabsView()
          }
           .edgesIgnoringSafeArea(.all)
       }

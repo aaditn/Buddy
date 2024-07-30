@@ -1,6 +1,6 @@
 //
 //  Log.swift
-//  Buddy
+//  sussy
 //
 //  Created by Aadit Noronha on 7/24/24.
 //

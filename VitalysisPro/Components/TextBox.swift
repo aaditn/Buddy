@@ -9,6 +9,7 @@ struct TextBox: View {
     
     enum FieldType {
         case normal
+        case phone
         case email
         case password
     }
@@ -20,29 +21,41 @@ struct TextBox: View {
     private let activeColor = Color("boxBefore")
     private let inactiveColor = Color("boxAfter")
     private let validColor = Color.green.opacity(0.7)
-    private let invalidColor = Color.white.opacity(0.7)
+    private let invalidColor = Color.gray
     
     var body: some View {
         
         
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color("textBoxFill").opacity(0.7))
+                .fill(Color.clear)
                 .stroke(isValid ? validColor: invalidColor, lineWidth: 1)
             if fieldType == .password {
                 SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("fg").opacity(0.5)))
-                   
+                
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .foregroundStyle(Color("fg"))
                     .padding(.horizontal, 21)
                     .frame(width: 320, height: 59)
                     .multilineTextAlignment(.leading) // Align text to the left
-                    
+                
                     .onChange(of: text) { newValue in
                         validateInput(newValue)
                     }
                 
+            } else if fieldType == .phone {
+                TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("fg").opacity(0.5)))
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .foregroundStyle(Color("fg"))
+                    .padding(.horizontal, 21)
+                    .frame(width: 320, height: 59)
+                    .multilineTextAlignment(.leading) // Align text to the left
+                
+                    .onChange(of: text) { newValue in
+                        validateInput(newValue)
+                    }
             } else {
                 TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(Color("fg").opacity(0.5)))
                    
@@ -77,6 +90,8 @@ struct TextBox: View {
            // break
             // Example validation for a normal field (e.g., name)
             isValid = value.count > 0
+        case .phone:
+            isValid = value.count == 10
         case .email:
             // Example validation for email
             isValid = isValidEmail(value)

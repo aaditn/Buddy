@@ -14,9 +14,11 @@ class UserStore: ObservableObject {
     }
     
     static func example() -> UserStore {
-        let person1: Person = Person(fName: "Anuhya", lName: "Gottam", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
-        let person2: Person = Person(fName: "Paige", lName: "Shugart", tag: "00002", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
-        let person3: Person = Person(fName: "Aadit", lName: "Noronha", tag: "00003", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.twoTap())
+        
+        let data: [Image] = [Image("exampleDude"), Image("exampleDude"),Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude")]
+        let person1: Person = Person(fName: "Aadharsh", lName: "Rajkumar", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap(), trainingData: data)
+        let person2: Person = Person(fName: "Paige", lName: "Shugart", tag: "00002", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap(), trainingData: data)
+        let person3: Person = Person(fName: "Aadit", lName: "Noronha", tag: "00003", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.twoTap(), trainingData: data)
         
         // Create a calendar instance
         let calendar = Calendar.current
@@ -31,7 +33,7 @@ class UserStore: ObservableObject {
         let encounter2: Encounter = Encounter(date: fourMonthsAgo, person: person2)
         let encounter3: Encounter = Encounter(date: twoHoursAgo, person: person3)
         
-        return UserStore(name: "Joe Mama", img: Image("exampleDude"), logs: [person1], encounters: [encounter1])
+        return UserStore(name: "Matt Lussier", img: Image("exampleDude"), logs: [person1], encounters: [encounter1])
     }
 
 }

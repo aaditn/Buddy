@@ -1,6 +1,5 @@
 import SwiftUI
 
-import SwiftUI
 
 @available(iOS 18.0, *)
 struct TabsView: View {
@@ -8,7 +7,7 @@ struct TabsView: View {
     private let tabs = [
         ("Home", "house.fill"),
         ("Log", "list.bullet.rectangle"),
-        ("Browse", "book.fill")]
+        ("Discover", "books.vertical.fill")]
     
     var body: some View {
         ZStack {

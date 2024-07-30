@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  Buddy
+//  sussy
 //
 //  Created by Aadit Noronha on 7/24/24.
 //
@@ -60,6 +60,7 @@ struct SettingsView: View {
                                 Text("Settings")
                                     .font(.system(size: 20, weight: .medium))
                                     .padding(.top, 10)
+                                    .foregroundStyle(Color("bg"))
                                 
                             }.padding(.top, 45)
                             
@@ -99,11 +100,13 @@ struct SettingsView: View {
                                     .offset(y: -10)
                                 Spacer()
                             }
+                            .padding(.top, 20)
                             Text("Customize your experience according \n to your needs.")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.system(size: 14, weight: .medium))
                                 .frame(width: 300)
-                                .offset(y: -10)
+                            
                                 .multilineTextAlignment(.leading)
+                                .padding(5)
                               
                             Spacer()
                         }

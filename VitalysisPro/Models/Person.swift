@@ -15,6 +15,7 @@ class Person: Identifiable {
     var tag: String
     var isFavorite: Bool
     var img: Image
+    var trainingData: [Image]
     var pattern: Pattern
 
     func circleImg(size: Int, x: Bool) -> some View {
@@ -39,14 +40,16 @@ class Person: Identifiable {
             .frame(width: CGFloat(size), height: CGFloat(size))
     }
 
+    
 
-    init(fName: String, lName: String, tag: String, isFavorite: Bool, img: Image, pattern: Pattern) {
+    init(fName: String, lName: String, tag: String, isFavorite: Bool, img: Image, pattern: Pattern, trainingData: [Image]) {
         self.fName = fName
         self.lName = lName
         self.tag = tag
         self.isFavorite = isFavorite
         self.img = img
         self.pattern = pattern
+        self.trainingData = trainingData
     }
     func name() -> String {
         return ("\(fName) \(lName)")

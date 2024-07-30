@@ -25,7 +25,7 @@ struct ContentView: View {
                         .font(.system(size: 45 * textSize, weight: .bold))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [Color.white.opacity(0.3), Color("fg")],
+                                colors: [Color.white.opacity(0.7), Color("fg")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -50,7 +50,7 @@ struct ContentView: View {
                 
                     Text("Click Anywhere to Begin")
                         .font(.system(size: 20, weight: .bold))
-                        .foregroundStyle(Color.white.opacity(0.7))
+                        .foregroundStyle(Color("fg"))
                         .opacity(textOpacity3)
                      
                 }

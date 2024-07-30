@@ -1,6 +1,6 @@
 //
 //  ScanView.swift
-//  Buddy
+//  sussy
 //
 //  Created by Aadit Noronha on 7/22/24.
 //

@@ -1,6 +1,6 @@
 //
 //  ScanView.swift
-//  Buddy
+//  sussy
 //
 //  Created by Aadit Noronha on 7/22/24.
 //
@@ -117,8 +117,7 @@ struct ScanView: View {
     }
 }
 
-import SwiftUI
-import AVFoundation
+
 
 @available(iOS 18.0, *)
 struct CameraView: View {
@@ -153,21 +152,8 @@ struct CameraView: View {
                                 .foregroundStyle(Color.blue)
                                 .frame(width: 270)
                         )
-                        .overlay(
-                            Circle()
-                                .stroke(lineWidth: 5)
-                                .foregroundStyle(Color.black.opacity(0.2))
-                                .frame(width: 313)
-                                .overlay(
-                                    Text(text)
-                                        .opacity(opacity)
-                                        .animation(.easeInOut(duration: 0.5), value: opacity)
-                                        .font(.system(size: 70, weight: .thin))
-                                        .foregroundStyle(Color.white.opacity(0.8))
-                                )
-                        )
                 }
-                
+
                 VStack {
                     HStack {
                         Button(action: {
@@ -214,7 +200,7 @@ struct CameraView: View {
                             .font(.system(size: 18, weight: .medium))
                             .foregroundStyle(Color("fg"))
                     }
-                    
+
                     Button(action: {
                         showAccessibility = true
                     }) {
@@ -229,12 +215,32 @@ struct CameraView: View {
                     cameraManager.capturePhoto()
                 }
             }
-            .onReceive(cameraManager.$capturedImage) { image in
-                if let image = image {
-                    let circularImage = circularImage(from: image)
-                    user.people.append(Person(fName: "", lName: "", tag: "0000\(user.people.count + 1)", isFavorite: false, img: Image(uiImage: circularImage), pattern: Pattern.oneTap()))
+            .onReceive(cameraManager.$burstImages) { images in
+                if !images.isEmpty {
+                    let circularImages = images.map { circularImage(from: $0) }
                     
-                    log = user.people.last!
+                    // Check if the user already exists
+                    if let existingUser = user.people.first(where: { $0.tag == "0001" }) {
+                        // Append images to the existing user's training data
+                        existingUser.trainingData.append(contentsOf: circularImages.map { Image(uiImage: $0) })
+                        createTextFile()
+                    } else {
+                        // Create a new user if it doesn't exist
+                        let newUser = Person(
+                            fName: "Aadit",
+                            lName: "Noronha",
+                            tag: "0001", // Use a fixed tag for the single user
+                            isFavorite: false,
+                            img: Image(uiImage: circularImages.first!), // Use the first image as the main image
+                            pattern: Pattern.oneTap(),
+                            trainingData: circularImages.map { Image(uiImage: $0) }
+                        )
+                        user.people.append(newUser)
+                        createUserFolder(for: newUser) // Create a folder for the new user
+                        createTextFile()
+                    }
+
+                    log = user.people.first! // Update log to the first user
                     playSuccess = true
                     withAnimation(.linear(duration: 1)) {
                         animateSuccessOpacity = 1
@@ -279,27 +285,70 @@ struct CameraView: View {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 text = ""
+                startBurstCapture()
             }
         }
     }
-    
+
+    private func startBurstCapture() {
+        cameraManager.startBurstCapture()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            cameraManager.stopBurstCapture()
+        }
+    }
+
     private func circularImage(from image: UIImage) -> UIImage {
         let size = min(image.size.width, image.size.height)
         let squareRect = CGRect(x: (image.size.width - size) / 2, y: (image.size.height - size) / 2, width: size, height: size)
-        
+
         guard let croppedCGImage = image.cgImage?.cropping(to: squareRect) else {
             return image
         }
-        return image
+        return UIImage(cgImage: croppedCGImage)
+    }
+
+    private func createUserFolder(for user: Person) {
+        let userFolderName = "\(user.fName)\(user.lName)"
+        let url = URL(string: "http://127.20.10.6:5000/create_folder")! // Replace with your Raspberry Pi's IP
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = ["folder_name": userFolderName]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error creating folder: \(error)")
+            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                print("Folder created successfully: \(userFolderName)")
+            } else {
+                print("Unexpected response")
+            }
+        }.resume()
+    }
+
+    private func createTextFile() {
+        let url = URL(string: "http://127.20.10.6:5000/create_file")! // Replace with your Raspberry Pi's IP
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let content = "User created on \(Date())"
+        let body: [String: Any] = ["file_name": "user_created.txt", "content": content]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error creating text file: \(error)")
+            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                print("Text file created successfully")
+            } else {
+                print("Unexpected response")
+            }
+        }.resume()
     }
 }
-
-
-
-
-
-
-
 
 #Preview {
     if #available(iOS 18.0, *) {
