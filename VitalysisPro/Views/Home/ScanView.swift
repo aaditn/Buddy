@@ -246,12 +246,13 @@ struct CameraView: View {
                                 try await saveUserAndSendImage() {
                                     isUploading = false
                                     showNameInput = false
-                                    showSettings = true
+                                  
                                 }
                             } catch {
                                 print("error here")
                             }
                         }
+                        showSettings = true
                     }
                     .padding()
                 }
@@ -317,6 +318,34 @@ struct CameraView: View {
         return image
     }
 
+//    private func saveUserAndSendImage(completion: @escaping () -> Void) async {
+//        print("Saving user and sending image...")
+//
+//        guard let image = cameraManager.burstImages.first else {
+//            print("No image found in burst images")
+//            return
+//        }
+//        let circularImage = circularImage(from: image)
+//
+//        // Save user in the environment store
+//        let newUser = Person(
+//            fName: fName,
+//            lName: lName,
+//            tag: "0001", // Use a fixed tag for the single user
+//            isFavorite: false,
+//            img: Image(uiImage: circularImage),
+//            pattern: Pattern.oneTap()
+//        )
+//        user.people.append(newUser)
+//        log = newUser
+//
+//        // Send image to server
+//        do {
+//            try await sendImageToServer(image: circularImage, personName: "\(fName)\(lName)", completion: completion)
+//        } catch {
+//            print("error in sending image")
+//        }
+//    }
     private func saveUserAndSendImage(completion: @escaping () -> Void) async {
         print("Saving user and sending image...")
 
@@ -335,16 +364,20 @@ struct CameraView: View {
             img: Image(uiImage: circularImage),
             pattern: Pattern.oneTap()
         )
-        user.people.append(newUser)
-        log = newUser
+
+        await MainActor.run {
+            user.people.append(newUser)
+            log = newUser
+        }
 
         // Send image to server
         do {
             try await sendImageToServer(image: circularImage, personName: "\(fName)\(lName)", completion: completion)
         } catch {
-            print("error in sending image")
+            print("Error in sending image")
         }
     }
+
 
     private func sendImageToServer(image: UIImage, personName: String, completion: @escaping () -> Void) async throws {
         guard let url = URL(string: "http://172.16.228.193:8000/upload") else {

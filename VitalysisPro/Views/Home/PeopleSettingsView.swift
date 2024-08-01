@@ -160,7 +160,7 @@ struct Haptics: View {
                                     VStack {
                                         Text("\(log.fName) \(log.lName)")
                                             .font(.system(size: 15, weight: .medium))
-                                            .foregroundStyle(Color.black)
+                                            .foregroundStyle(Color("fg"))
                                             .offset(y: -5)
                                         Text("''\(log.fName)''")
                                             .font(.system(size: 15, weight: .medium))

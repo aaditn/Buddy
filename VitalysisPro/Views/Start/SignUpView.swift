@@ -97,10 +97,10 @@ struct SignUpView: View {
                 }
                 
                 Button(action: {
-                  // if isNameValid && isEmailValid && isPasswordValid && isPhoneValid {
+                  if isNameValid && isEmailValid && isPasswordValid && isPhoneValid {
                         submit = true
                         print("Validation success")
-                  // } else {
+                  } else {
                         print(isNameValid)
                         print(isEmailValid)
                         print(isPasswordValid)
@@ -108,7 +108,7 @@ struct SignUpView: View {
                         print("Validation failed")
                      //   alertMessage = "Please fill in all fields correctly."
                    //     showAlert = true
-                  // }
+                  }
                 }) {
                     Text("Sign Up")
                         .frame(width: 320, height: 59)

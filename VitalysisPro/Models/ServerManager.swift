@@ -4,7 +4,7 @@ import Swifter
 
 class ServerManager: ObservableObject {
     private var server: HttpServer?
-    private var user: UserStore // Reference to UserStore
+    @ObservedObject private var user: UserStore
 
     // Initialize with UserStore
     init(user: UserStore) {
@@ -17,6 +17,7 @@ class ServerManager: ObservableObject {
     }
 
     func startServer() {
+        print("User list: \(user.people.count)")
         server = HttpServer()
         server?.POST["/newEncounter"] = { [weak self] request in
             guard let self = self else { return .internalServerError }
@@ -28,16 +29,26 @@ class ServerManager: ObservableObject {
                     print("Received name: \(name)")
                     if name == "Unknown" {
                         let unknownPerson = Person(fName: "Unknown", lName: "", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
-                        print ("hehe")
+                        print("Adding unknown person")
                         DispatchQueue.main.async {
                             self.user.encounters.append(Encounter(date: Date(), person: unknownPerson))
                         }
                     } else {
-                        if let match = self.user.people.first(where: { $0.fName + $0.lName == name }) {
-                            DispatchQueue.main.async {
-                                self.user.encounters.append(Encounter(date: Date(), person: match))
+                        var matchFound = false
+
+                        for person in self.user.people {
+                            print("\(person.fName)\(person.lName)")
+                            print(name)
+                            if ("\(person.fName)\(person.lName)") == name {
+                                DispatchQueue.main.async {
+                                    self.user.encounters.append(Encounter(date: Date(), person: person))
+                                }
+                                matchFound = true
+                                break // Exit the loop once a match is found
                             }
-                        } else {
+                        }
+
+                        if !matchFound {
                             print("No match found for \(name)")
                         }
                     }

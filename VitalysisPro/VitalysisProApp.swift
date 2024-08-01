@@ -3,8 +3,9 @@ import SwiftData
 
 @available(iOS 18.0, *)
 @main
+
 struct VitalysisProApp: App {
-    private var store = UserStore.example()
+    @StateObject private var store = UserStore.example()
     @StateObject private var serverManager = ServerManager(user: UserStore.example())
 
     var body: some Scene {
@@ -15,6 +16,8 @@ struct VitalysisProApp: App {
         }
     }
 }
+
+
 
 
 struct HoverEffect: ViewModifier {

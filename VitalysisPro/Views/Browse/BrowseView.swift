@@ -37,7 +37,7 @@ struct BrowseView: View {
                             
                         }
                     }.padding(.top, 15)
-                        .foregroundStyle(Color.black)
+                        .foregroundStyle(Color("fg"))
                     Button(action:{
                         goSettings = true
                         print("hehehe")

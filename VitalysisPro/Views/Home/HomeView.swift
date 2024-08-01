@@ -65,7 +65,7 @@ struct HomeView: View {
                                     .font(.system(size: 40, weight: .semibold))
                                     .padding(.leading, 20)
                                     .offset(y: 5)
-                                    .foregroundStyle(Color.black)
+                                    .foregroundStyle(Color("fg"))
                             }
                             
                             Spacer()
@@ -73,7 +73,7 @@ struct HomeView: View {
                         HStack {
                             Text("Recent Scan")
                                 .font(.system(size: pressureMapTextSize, weight: .semibold))
-                                .foregroundStyle(Color.black)
+                                .foregroundStyle(Color("fg"))
                                 .padding(.leading, 20)
                                 .offset(y: offsetYPressureMapText)
                                 .onChange(of: showPressureMap) { _ in

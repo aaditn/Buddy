@@ -46,7 +46,7 @@ struct LogView: View {
                             .padding(.trailing, 15)
                     } .offset(x: 130, y: 20)
                     
-                } .foregroundStyle(Color.black)
+                } .foregroundStyle(Color("fg"))
                 
                 Picker("Show Dates", selection: $showDates) {
                     Text("Day").tag(0)
