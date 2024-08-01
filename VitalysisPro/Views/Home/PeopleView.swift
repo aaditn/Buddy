@@ -104,7 +104,7 @@ struct PeopleView: View {
                                                 Button(action: {
                                                     self.index = index
                                                 }) {
-                                                    log.circleImg(size: 80, x: log.isFavorite)
+                                                    log.circleImg(size: 80, showHeart: log.isFavorite)
                                                 }
                                             }
                                         }

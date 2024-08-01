@@ -1,12 +1,16 @@
 import SwiftUI
+import Swifter
+import Dispatch
 
 @available(iOS 18.0, *)
 struct LogView: View {
     @EnvironmentObject var user: UserStore
-    
+
     @State private var showDates: Int = 0
     @State var showSettings: Bool = false
-    
+
+    @State private var server: HttpServer?
+
     var body: some View {
         if (showSettings) {
             SettingsView()
@@ -105,7 +109,7 @@ struct LogView: View {
                     }
                     
                 }.frame(width: 350, height: 190)
-                   
+               
                 
                 HStack {
                     Text("Motion Trends")
@@ -137,10 +141,60 @@ struct LogView: View {
             }
             .edgesIgnoringSafeArea(.all)
             .background(Color("bg"))
+           
         }
         
     }
-    
+
+    func startServer() {
+        server = HttpServer()
+        
+        // Define the route to handle POST requests
+        server?.POST["/newEncounter"] = { request in
+            let body = request.body
+            do {
+                // Decode the JSON body
+                let json = try JSONDecoder().decode([String: String].self, from: Data(body))
+                if let name = json["name"] {
+                    // Find the matching person from the user data
+                    if let match = user.people.first(where: { $0.fName + $0.lName == name }) {
+                        print("Match found: \(match.fName) \(match.lName)")
+                        // Add encounter to the list
+                        user.encounters.append(Encounter(date: Date.now, person: match))
+                    } else {
+                        
+                        print("No match found for name: \(name)")
+                       
+                    }
+                } else {
+                    print("Name not found in JSON")
+                }
+            } catch {
+                // Print error if JSON decoding fails
+                print("Error decoding JSON: \(error.localizedDescription)")
+            }
+            return .ok(.text("Encounter added"))
+        }
+        
+        // Start the server
+        do {
+            try server?.start(8080)
+            print("Server started on port 8080")
+        } catch {
+            // Print error if server fails to start
+            print("Failed to start server: \(error.localizedDescription)")
+        }
+    }
+
+
+
+
+
+    func stopServer() {
+        server?.stop()
+        server = nil
+    }
+
     func formatDate(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

@@ -74,7 +74,7 @@ struct FacePopup: View {
             VStack {
                 
                 ZStack {
-                   person.img
+                    person.img
                         .resizable()
                         .scaledToFit()
                         .padding(.vertical, 10)

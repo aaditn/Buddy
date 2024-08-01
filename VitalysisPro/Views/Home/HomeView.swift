@@ -291,7 +291,7 @@ struct ImageGridHome: View {
                         selectPerson = log
                         isPerson = true
                     }){
-                        log.circleImg(size: size, x: log.isFavorite)
+                        log.circleImg(size: size, showHeart: log.isFavorite)
                     }
                     
                 }

@@ -116,29 +116,6 @@ struct SettingsView: View {
                     }.frame(width: 350, height: 180)
                 }
                 VStack {
-                    Button (action: {
-                        mode = 0
-                    }){
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color("white"))
-                            HStack {
-                                Image("BluetoothIcon")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 32)
-                                    .padding(.leading, 20)
-                               
-                                
-                                text(t: "Bluetooth")
-                                Spacer()
-                                
-                            }
-                            
-                        }.frame(width: 350, height: 50)
-                            .padding(.top, 5)
-                    }
-                   
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color("white"))

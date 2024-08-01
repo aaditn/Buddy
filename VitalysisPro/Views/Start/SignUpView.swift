@@ -131,7 +131,7 @@ struct SignUpView: View {
             print("IEUGBAOIQGNFOQUEGBQ")
         }
         .fullScreenCover(isPresented: $submit, content: {
-            BluetoothView(isIntro: true, mode: $mode)
+            TabsView()
         })
         .background(Color("white"))
     }

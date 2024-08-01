@@ -16,9 +16,9 @@ class UserStore: ObservableObject {
     static func example() -> UserStore {
         
         let data: [Image] = [Image("exampleDude"), Image("exampleDude"),Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude"), Image("exampleDude")]
-        let person1: Person = Person(fName: "Aadharsh", lName: "Rajkumar", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap(), trainingData: data)
-        let person2: Person = Person(fName: "Paige", lName: "Shugart", tag: "00002", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap(), trainingData: data)
-        let person3: Person = Person(fName: "Aadit", lName: "Noronha", tag: "00003", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.twoTap(), trainingData: data)
+        let person1: Person = Person(fName: "Aadharsh", lName: "Rajkumar", tag: "00001", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
+        let person2: Person = Person(fName: "Paige", lName: "Shugart", tag: "00002", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.oneTap())
+        let person3: Person = Person(fName: "Aadit", lName: "Noronha", tag: "00003", isFavorite: false, img: Image("exampleDude"), pattern: Pattern.twoTap())
         
         // Create a calendar instance
         let calendar = Calendar.current
@@ -35,6 +35,25 @@ class UserStore: ObservableObject {
         
         return UserStore(name: "Matt Lussier", img: Image("exampleDude"), logs: [person1], encounters: [encounter1])
     }
+    func addOrUpdateUser(with images: [UIImage]) {
+            if let existingUser = people.first(where: { $0.tag == "0001" }) {
+                
+            } else {
+                let newUser = Person(
+                    fName: "Aadit",
+                    lName: "Noronha",
+                    tag: "0001",
+                    isFavorite: false,
+                    img: Image(uiImage: images.first!),
+                    pattern: Pattern.oneTap()
+                )
+                people.append(newUser)
+            }
+        }
+
+        func getFirstUser() -> Person? {
+            return people.first
+        }
 
 }
 

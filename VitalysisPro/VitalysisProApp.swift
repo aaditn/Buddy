@@ -1,10 +1,3 @@
-//
-//  VitalysisProApp.swift
-//  VitalysisPro
-//
-//  Created by Aadit Noronha on 7/13/24.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -12,36 +5,18 @@ import SwiftData
 @main
 struct VitalysisProApp: App {
     private var store = UserStore.example()
-    
-    /*var sharedModelContainer: ModelContainer = {
-           let schema = Schema([
-               User.self,
-               Servo.self,
-               MigraineLog.self
-           ])
-           let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-           do {
-               return try ModelContainer(for: schema, configurations: [modelConfiguration])
-           } catch {
-               fatalError("Could not create ModelContainer: \(error)")
-           }
-       }()
-     */
+    @StateObject private var serverManager = ServerManager(user: UserStore.example())
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(store)
+                .environmentObject(serverManager)
         }
-        
-        
-       // .modelContainer(sharedModelContainer)
     }
-    
-    
-    // "4:44 PM on June 23, 2016\n"
 }
+
+
 struct HoverEffect: ViewModifier {
     @State private var isHovered = false // Track hover state
     let action: () -> Void // Action to perform on hover
@@ -67,7 +42,7 @@ extension View {
 struct CustomNavigationStack<Content>: View where Content: View {
     @Binding var currentIndex: Bool
     var content: () -> Content
-    
+
     var body: some View {
         ZStack {
             content()

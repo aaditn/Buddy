@@ -117,8 +117,6 @@ struct ScanView: View {
     }
 }
 
-
-
 @available(iOS 18.0, *)
 struct CameraView: View {
     @ObservedObject var cameraManager = CameraManager()
@@ -132,6 +130,10 @@ struct CameraView: View {
     @State private var playSuccess: Bool = false
     @State private var animateSuccessOpacity: Double = 0
     @State private var hide: Bool = false
+    @State private var showNameInput: Bool = false
+    @State private var fName: String = ""
+    @State private var lName: String = ""
+    @State private var isUploading: Bool = false
 
     var body: some View {
         if showSettings {
@@ -167,6 +169,10 @@ struct CameraView: View {
                     Spacer()
                 }
 
+                Text(text)
+                    .font(.system(size: 50, weight: .thin))
+                    .foregroundStyle(Color.gray)
+                    .opacity(opacity)
                 VStack {
                     Spacer()
 
@@ -216,45 +222,47 @@ struct CameraView: View {
                 }
             }
             .onReceive(cameraManager.$burstImages) { images in
-                if !images.isEmpty {
-                    let circularImages = images.map { circularImage(from: $0) }
-                    
-                    // Check if the user already exists
-                    if let existingUser = user.people.first(where: { $0.tag == "0001" }) {
-                        // Append images to the existing user's training data
-                        existingUser.trainingData.append(contentsOf: circularImages.map { Image(uiImage: $0) })
-                        createTextFile()
-                    } else {
-                        // Create a new user if it doesn't exist
-                        let newUser = Person(
-                            fName: "Aadit",
-                            lName: "Noronha",
-                            tag: "0001", // Use a fixed tag for the single user
-                            isFavorite: false,
-                            img: Image(uiImage: circularImages.first!), // Use the first image as the main image
-                            pattern: Pattern.oneTap(),
-                            trainingData: circularImages.map { Image(uiImage: $0) }
-                        )
-                        user.people.append(newUser)
-                        createUserFolder(for: newUser) // Create a folder for the new user
-                        createTextFile()
-                    }
-
-                    log = user.people.first! // Update log to the first user
+                if let image = images.first {
+                    let circularImage = circularImage(from: image)
+                    showNameInput = true
                     playSuccess = true
                     withAnimation(.linear(duration: 1)) {
                         animateSuccessOpacity = 1
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showSettings = true
-                    }
                 }
+            }
+            .sheet(isPresented: $showNameInput) {
+                VStack {
+                    TextField("First Name", text: $fName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    TextField("Last Name", text: $lName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    Button("Save") {
+                        isUploading = true
+                        Task {
+                            do {
+                                try await saveUserAndSendImage() {
+                                    isUploading = false
+                                    showNameInput = false
+                                    showSettings = true
+                                }
+                            } catch {
+                                print("error here")
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .padding()
             }
         }
     }
 
     private func startBlinkingAnimation() {
         if text.isEmpty {
+            print("Starting blinking animation...")
             text = "3"
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation {
@@ -291,8 +299,10 @@ struct CameraView: View {
     }
 
     private func startBurstCapture() {
+        print("Starting burst capture...")
         cameraManager.startBurstCapture()
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            print("Stopping burst capture...")
             cameraManager.stopBurstCapture()
         }
     }
@@ -304,55 +314,101 @@ struct CameraView: View {
         guard let croppedCGImage = image.cgImage?.cropping(to: squareRect) else {
             return image
         }
-        return UIImage(cgImage: croppedCGImage)
+        return image
     }
 
-    private func createUserFolder(for user: Person) {
-        let userFolderName = "\(user.fName)\(user.lName)"
-        let url = URL(string: "http://127.20.10.6:5000/create_folder")! // Replace with your Raspberry Pi's IP
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let body: [String: Any] = ["folder_name": userFolderName]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+    private func saveUserAndSendImage(completion: @escaping () -> Void) async {
+        print("Saving user and sending image...")
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error creating folder: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                print("Folder created successfully: \(userFolderName)")
-            } else {
-                print("Unexpected response")
-            }
-        }.resume()
+        guard let image = cameraManager.burstImages.first else {
+            print("No image found in burst images")
+            return
+        }
+        let circularImage = circularImage(from: image)
+
+        // Save user in the environment store
+        let newUser = Person(
+            fName: fName,
+            lName: lName,
+            tag: "0001", // Use a fixed tag for the single user
+            isFavorite: false,
+            img: Image(uiImage: circularImage),
+            pattern: Pattern.oneTap()
+        )
+        user.people.append(newUser)
+        log = newUser
+
+        // Send image to server
+        do {
+            try await sendImageToServer(image: circularImage, personName: "\(fName)\(lName)", completion: completion)
+        } catch {
+            print("error in sending image")
+        }
     }
 
-    private func createTextFile() {
-        let url = URL(string: "http://127.20.10.6:5000/create_file")! // Replace with your Raspberry Pi's IP
+    private func sendImageToServer(image: UIImage, personName: String, completion: @escaping () -> Void) async throws {
+        guard let url = URL(string: "http://172.16.228.193:8000/upload") else {
+            print("Invalid URL")
+            completion()
+            return
+        }
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let content = "User created on \(Date())"
-        let body: [String: Any] = ["file_name": "user_created.txt", "content": content]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 30 // Set a 30-second timeout
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error creating text file: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                print("Text file created successfully")
-            } else {
-                print("Unexpected response")
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("Failed to convert image to JPEG data")
+            completion()
+            return
+        }
+
+        var body = Data()
+
+        // Add the person name to the request
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"person\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(personName)\r\n".data(using: .utf8)!)
+
+        // Add the image file to the request
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(imageData)
+        body.append("\r\n".data(using: .utf8)!)
+
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+
+        print("Sending request to \(url) with image data")
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let interpretedResponse = response as? HTTPURLResponse {
+                let statusCode = interpretedResponse.statusCode
+                if statusCode != 200 {
+                    print("Non 200 error code: \(statusCode)")
+                } else {
+                    print("200 OK")
+                }
             }
-        }.resume()
+            
+            print("Response data: \(String(data: data, encoding: .utf8) ?? "No response data")")
+        } catch {
+            print("Error during URLSession data task: \(error.localizedDescription)")
+        }
+        
+        completion()
     }
 }
-
 #Preview {
     if #available(iOS 18.0, *) {
-        ScanView()
+        CameraView(showStart: .constant(true))
             .environmentObject(UserStore.example())
     } else {
         // Fallback on earlier versions

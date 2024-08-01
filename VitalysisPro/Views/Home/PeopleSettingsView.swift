@@ -153,7 +153,7 @@ struct Haptics: View {
                                 
                                 Spacer()
                                 HStack {
-                                    log.circleImg(size: 110, x: toggleFavorites)
+                                    log.circleImg(size: 110, showHeart: toggleFavorites)
                                         .padding(.leading, 30)
                                     
                                     Spacer()
@@ -402,7 +402,7 @@ struct Edit: View {
                                 Spacer()
                                 VStack {
                                     
-                                    log.circleImg(size: 110, x: toggleFavorites)
+                                    log.circleImg(size: 110, showHeart: toggleFavorites)
                                      
                                     
                                     
@@ -584,7 +584,7 @@ struct mainView: View {
                                 
                                 Spacer()
                                 HStack {
-                                    log.circleImg(size: 110, x: toggleFavorites)
+                                    log.circleImg(size: 110, showHeart: toggleFavorites)
                                         .padding(.leading, 30)
                                     
                                     Spacer()

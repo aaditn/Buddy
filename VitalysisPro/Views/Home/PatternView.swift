@@ -38,7 +38,7 @@ struct PatternView: View {
                         Button(action:{
                             print (timestamps)
                             print(getCurrentTime())
-                            log.pattern = Pattern(timeStamps: timestamps, length: getCurrentTime())
+                            log.pattern = Pattern(timestamps: timestamps, length: getCurrentTime())
                             cover = false
                         }){
                             Text("Save")
